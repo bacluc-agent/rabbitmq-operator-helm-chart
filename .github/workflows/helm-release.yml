@@ -10,16 +10,14 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/appuio/helm:3.20.0
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-
       - name: Package Helm chart
         run: |
-          helm dependency update .
           helm package .
 
       - name: Login to GHCR
