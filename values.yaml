@@ -1,4 +1,3 @@
-useCertManager: true
 clusterOperator:
   image:
     registry: docker.io

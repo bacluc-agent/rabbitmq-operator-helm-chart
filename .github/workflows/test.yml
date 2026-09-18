@@ -22,9 +22,6 @@ jobs:
       - name: Template default
         run: helm template test .
 
-      - name: Template without cert-manager
-        run: helm template test . --set useCertManager=false
-
       - name: Install cert-manager
         run: |
           kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
@@ -41,17 +38,6 @@ jobs:
           kubectl wait --for=condition=available deployment/messaging-topology-operator -n rabbitmq-system --timeout=600s
 
       - name: Uninstall chart
-        run: helm uninstall test --wait
-
-      - name: Install chart without cert-manager
-        run: helm install test . --set useCertManager=false --wait --timeout 10m
-
-      - name: Wait for operators without cert-manager
-        run: |
-          kubectl wait --for=condition=available deployment/rabbitmq-cluster-operator -n rabbitmq-system --timeout=600s
-          kubectl wait --for=condition=available deployment/messaging-topology-operator -n rabbitmq-system --timeout=600s
-
-      - name: Uninstall chart without cert-manager
         run: helm uninstall test --wait
 
       - name: Assert CRDs retained

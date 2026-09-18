@@ -1,33 +1,13 @@
-{{- $ca := genCA "rabbitmq-topology-ca" 3650 }}
-{{- $servingCert := genSignedCert "webhook-service.rabbitmq-system.svc" nil (list "webhook-service.rabbitmq-system.svc" "webhook-service.rabbitmq-system.svc.cluster.local") 365 $ca }}
-{{- if not .Values.useCertManager }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: webhook-server-cert
-  namespace: rabbitmq-system
-type: kubernetes.io/tls
-data:
-  ca.crt: {{ $ca.Cert | b64enc | quote }}
-  tls.crt: {{ $servingCert.Cert | b64enc | quote }}
-  tls.key: {{ $servingCert.Key | b64enc | quote }}
----
-{{- end }}
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  {{- if .Values.useCertManager }}
   annotations:
     cert-manager.io/inject-ca-from: rabbitmq-system/serving-cert
-  {{- end }}
   name: topology.rabbitmq.com
 webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -48,9 +28,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -71,9 +48,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -94,9 +68,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -117,9 +88,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -140,9 +108,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -163,9 +128,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -186,9 +148,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -210,9 +169,6 @@ webhooks:
   - v1
   - v1beta1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -233,9 +189,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -256,9 +209,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
@@ -279,9 +229,6 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    {{- if not .Values.useCertManager }}
-    caBundle: {{ $ca.Cert | b64enc }}
-    {{- end }}
     service:
       name: webhook-service
       namespace: rabbitmq-system
