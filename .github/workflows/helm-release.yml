@@ -15,7 +15,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      HELM_COMMAND: docker run --rm -it --user $UID --volume "$PWD":/app --workdir /app --volume ~/.config/helm/registry/:/helm/registry --environment HELM_REGISTRY_CONFIG=/helm/registry/config.json ${{ env.HELM_IMAGE }}:${{ env.HELM_VERSION }}
+      HELM_COMMAND: "docker run --rm -it --user \$UID --volume \"$PWD\":/app --workdir /app --volume ~/.config/helm/registry/:/helm/registry --environment HELM_REGISTRY_CONFIG=/helm/registry/config.json ${{ env.HELM_IMAGE }}:${{ env.HELM_VERSION }}"
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
