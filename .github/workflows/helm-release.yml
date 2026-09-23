@@ -11,7 +11,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/appuio/helm:3.20.0
+      image: ghcr.io/appuio/helm-v4:vbacluc-test-user
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
