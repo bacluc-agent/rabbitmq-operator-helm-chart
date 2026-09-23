@@ -37,6 +37,8 @@ spec:
           value: "{{ .Values.rabbitmqImage.registry }}/{{ .Values.rabbitmqImage.repository }}:{{ .Values.rabbitmqImage.version }}"
         - name: DEFAULT_USER_UPDATER_IMAGE
           value: "{{ .Values.credentialUpdaterImage.registry }}/{{ .Values.credentialUpdaterImage.repository }}"
+        - name: ENABLE_WEBHOOKS
+          value: "false"
         image: "{{ .Values.clusterOperator.image.registry }}/{{ .Values.clusterOperator.image.repository }}:{{ .Chart.AppVersion }}"
         name: operator
         {{- if .Values.clusterOperator.containerSecurityContext.enabled }}

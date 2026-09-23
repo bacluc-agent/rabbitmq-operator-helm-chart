@@ -1,7 +1,7 @@
 clusterOperator:
   image:
-    registry: docker.io
-    repository: bitnamilegacy/rabbitmq-cluster-operator
+    registry: ghcr.io
+    repository: rabbitmq/cluster-operator
   podSecurityContext:
     enabled: false
   containerSecurityContext:

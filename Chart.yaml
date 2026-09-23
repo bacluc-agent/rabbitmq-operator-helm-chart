@@ -1,8 +1,8 @@
 apiVersion: v2
-name: rabbitmq-operator
+name: rabbitmq-cluster-operator
 description: Helm chart for RabbitMQ Cluster Operator wrapping upstream manifests
 type: application
-version: 2.6.0
-appVersion: "2.6.0"
+version: 2.23.0
+appVersion: "2.23.0"
 annotations:
   messaging-topology-operator-version: "1.12.1"
