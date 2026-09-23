@@ -1,0 +1,33 @@
+name: Publish Helm Chart
+on:
+  push:
+    tags:
+      - "v*"
+permissions:
+  contents: read
+  packages: write
+
+env:
+  HELM_VERSION: vbacluc-test-user
+  HELM_IMAGE: ghcr.io/appuio/helm-v4
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: setup helm
+        run: |
+          mkdir -p ~/.config/helm/registry/
+          echo "{}" > ~/.config/helm/registry/config.json
+
+      - name: Package Helm chart
+        run: scripts/helm-docker.sh package .
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | scripts/helm-docker.sh registry login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Push Helm chart
+        run: scripts/helm-docker.sh push ./*.tgz oci://ghcr.io/${{ github.repository }}

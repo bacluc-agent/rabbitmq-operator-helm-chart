@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: serving-cert
+  namespace: rabbitmq-system
+spec:
+  dnsNames:
+  - webhook-service.rabbitmq-system.svc
+  - webhook-service.rabbitmq-system.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: selfsigned-issuer
+  secretName: webhook-server-cert
