@@ -14,8 +14,6 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      HELM_COMMAND: "docker run --rm -it --user $UID --volume \"$PWD\":/app --workdir /app --volume ~/.config/helm/registry/:/helm/registry --environment HELM_REGISTRY_CONFIG=/helm/registry/config.json ${{ github.env.HELM_IMAGE }}:${{ github.env.HELM_VERSION }}"
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -27,16 +25,16 @@ jobs:
 
       - name: Package Helm chart
         run: |
-         $HELM_COMMAND package .
+          docker run --rm --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" package .
 
       - name: Login to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
-            $HELM_COMMAND registry login ghcr.io \
+            docker run --rm -i --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" registry login ghcr.io \
               --username "${{ github.actor }}" \
               --password-stdin
 
       - name: Push Helm chart
         run: |
-          $HELM_COMMAND push ./*.tgz \
+          docker run --rm --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" push ./*.tgz \
             oci://ghcr.io/${{ github.repository }}
