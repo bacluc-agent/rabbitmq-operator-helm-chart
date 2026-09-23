@@ -7,27 +7,36 @@ permissions:
   contents: read
   packages: write
 
+env:
+  HELM_VERSION: vbacluc-test-user
+  HELM_IMAGE: ghcr.io/appuio/helm-v4
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/appuio/helm-v4:vbacluc-test-user
+    env:
+      HELM_COMMAND: docker run --rm -it --user $UID --volume "$PWD":/app --workdir /app --volume ~/.config/helm/registry/:/helm/registry --environment HELM_REGISTRY_CONFIG=/helm/registry/config.json ${{ env.HELM_IMAGE }}:${{ env.HELM_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: setup helm
+        run: |
+          mkdir -p ~/.config/helm/registry/
+          echo "{}" > ~/.config/helm/registry/config.json
+
       - name: Package Helm chart
         run: |
-          helm package .
+         $HELM_COMMAND package .
 
       - name: Login to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
-            helm registry login ghcr.io \
+            $HELM_COMMAND registry login ghcr.io \
               --username "${{ github.actor }}" \
               --password-stdin
 
       - name: Push Helm chart
         run: |
-          helm push ./*.tgz \
+          $HELM_COMMAND push ./*.tgz \
             oci://ghcr.io/${{ github.repository }}
