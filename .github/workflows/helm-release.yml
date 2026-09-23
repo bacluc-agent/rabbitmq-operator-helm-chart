@@ -24,17 +24,10 @@ jobs:
           echo "{}" > ~/.config/helm/registry/config.json
 
       - name: Package Helm chart
-        run: |
-          docker run --rm --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" helm package .
+        run: scripts/helm-docker.sh package .
 
       - name: Login to GHCR
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
-            docker run --rm -i --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" helm registry login ghcr.io \
-              --username "${{ github.actor }}" \
-              --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | scripts/helm-docker.sh registry login ghcr.io --username "${{ github.actor }}" --password-stdin
 
       - name: Push Helm chart
-        run: |
-          docker run --rm --user "$(id -u)" --volume "$PWD":/app --workdir /app --volume "$HOME/.config/helm/registry/":/helm/registry --env HELM_REGISTRY_CONFIG=/helm/registry/config.json "$HELM_IMAGE:$HELM_VERSION" helm push ./*.tgz \
-            oci://ghcr.io/${{ github.repository }}
+        run: scripts/helm-docker.sh push ./*.tgz oci://ghcr.io/${{ github.repository }}
